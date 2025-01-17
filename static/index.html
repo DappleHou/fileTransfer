@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>IP and File Upload</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+    }
+    form {
+      display: flex;
+      flex-direction: column;
+      max-width: 400px;
+    }
+    label, input, button {
+      margin-bottom: 15px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Submit IP and File</h1>
+  <form id="form">
+    <label for="ip">IP Address:</label>
+    <input type="text" id="ip" name="ip" placeholder="Enter IP address" required />
+
+    <label for="file">Choose a file:</label>
+    <input type="file" id="file" name="file" required />
+
+    <button type="submit">Submit</button>
+  </form>
+
+  <script>
+    document.getElementById("form").addEventListener("submit", async (event) => {
+      event.preventDefault();
+
+      const ip = document.getElementById("ip").value;
+      const fileInput = document.getElementById("file");
+      const file = fileInput.files[0];
+
+      if (!ip || !file) {
+        alert("Please provide both IP address and a file.");
+        return;
+      }
+
+      const formData = new FormData();
+      formData.append("ip", ip);
+      formData.append("file", file);
+
+      try {
+        const response = await fetch("http://localhost:8080/upload", {
+          method: "POST",
+          body: formData,
+        });
+
+        if (response.ok) {
+          const result = await response.json();
+          alert(`Success: ${result.message}`);
+        } else {
+          alert(`Error: ${response.statusText}`);
+        }
+      } catch (error) {
+        console.error("Error uploading file:", error);
+        alert("An error occurred while uploading the file.");
+      }
+    });
+  </script>
+</body>
+</html>

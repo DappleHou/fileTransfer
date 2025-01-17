@@ -1,1 +1,1 @@
-LAN file transfer
+LAN file transfer.
